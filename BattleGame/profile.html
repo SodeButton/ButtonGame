@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- 文字コードにutf-8を使う -->
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=Edge">
+
+    <!-- 幅をデバイスの画面サイズにし、ユーザーによるサイズ変更をできないようにする -->
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <!-- ページを全画面で表示する(iPad/iPhone用) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- ステータスバーを半透明で表示する(iPad/iPhone用) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Sample_1 Game</title>
+    <style type="text/css">
+		body {
+			text-align: center;
+		}
+    </style>
+</head>
+<body>
+
+	<p>
+		ユーザーネーム <input type="text" id="username_input" value="">
+	</p>
+	<p>
+		<input type="button" value="けってい" onclick="username_button()">
+	</p>
+	<form>
+        <input type="file" id="input_file">
+	</form>
+
+	<script type="text/javascript">
+		function username_button() {
+			if(username_input.value != "") {
+				var new_status =
+                `{
+                    "ver": "1.0.0",
+                    "status": {
+                        "lv":       1,
+                        "exp":      0,
+                        "hp":       30,
+                        "maxHp":    30,
+                        "mp":       0,
+                        "maxMp":    0,
+                        "atk":      1,
+                        "def":      1,
+                        "spd":      1,
+                        "luck":     1
+                    }
+                }`;
+				localStorage.setItem("Button_battle_username", username_input.value);
+				localStorage.setItem("Button_battle_status", new_status);
+
+				location.href = './index.html';
+			}
+		}
+
+        var allow_exts = new Array('wav', 'mp3', 'm4a'); //いろいろ
+
+        document.getElementById("input_file").addEventListener( "change", function() {
+        	var fileList = this.files ;
+
+        	for( var i=0,l=fileList.length; l>i; i++ ) {
+        		var fileReader = new FileReader() ;
+                if (!checkExt(fileList[i].name)) {
+                    console.log("サウンドファイルをアップロードしてね");
+                    return;
+                }
+
+        		fileReader.onload = function() {
+        			var dataUri = this.result ;
+                    console.log(dataUri);
+        		}
+
+        		fileReader.readAsDataURL( fileList[i] ) ;
+        	}
+        });
+
+        function checkExt(filename) {
+        	//比較のため小文字にする
+        	var ext = getExt(filename).toLowerCase();
+        	//許可する拡張子の一覧(allow_exts)から対象の拡張子があるか確認する
+        	if (allow_exts.indexOf(ext) === -1) return false;
+        	return true;
+        }
+
+        function getExt(filename) {
+        	var pos = filename.lastIndexOf('.');
+        	if (pos === -1) return '';
+        	return filename.slice(pos + 1);
+        }
+	</script>
+</body>
+</html>
